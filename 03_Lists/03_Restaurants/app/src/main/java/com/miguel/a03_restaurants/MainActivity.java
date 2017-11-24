@@ -20,12 +20,14 @@ public class MainActivity extends AppCompatActivity {
         lista = findViewById(R.id.listViewRestaurants);
 
         restaurantList = new ArrayList<>();
-        restaurantList.add(new Restaurant("Goiko Grill","Rep. Argentina Street, 30, Seville","0034954112233",4,"https://www.goikogrill.com/",""));
+        restaurantList.add(new Restaurant("Goiko Grill","Rep. Argentina Street, 30, Seville","0034954112233",4,"https://www.goikogrill.com/","https://www.goikogrill.com/wp-content/uploads/2017/05/GOIKO_GRILL_aragon-2.jpg"));
 
         MyRestaurantAdapter adapter = new MyRestaurantAdapter(
                 this,
                 R.layout.restaurant_item,
                 restaurantList
         );
+
+        lista.setAdapter(adapter);
     }
 }
