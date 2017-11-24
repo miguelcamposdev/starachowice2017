@@ -46,7 +46,7 @@ class MyRestaurantAdapter extends ArrayAdapter<Restaurant>{
         Restaurant current = restaurantList.get(position);
         String name = current.getName();
         String address = current.getAddress();
-        String phone = current.getPhoneNumber();
+        final String phone = current.getPhoneNumber();
         int rate = current.getRate();
         final String website = current.getWebsite();
         String photo = current.getPhoto();
@@ -64,6 +64,17 @@ class MyRestaurantAdapter extends ArrayAdapter<Restaurant>{
         textViewAddress.setText(address);
         textViewPhone.setText(phone);
         ratingBar.setRating(rate);
+
+        textViewPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phone));
+                if (intent.resolveActivity(ctx.getPackageManager()) != null) {
+                    ctx.startActivity(intent);
+                }
+            }
+        });
 
         imageViewLink.setOnClickListener(new View.OnClickListener() {
             @Override
