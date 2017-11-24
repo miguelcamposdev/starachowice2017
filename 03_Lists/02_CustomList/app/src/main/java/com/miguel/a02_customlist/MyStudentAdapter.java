@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -40,7 +42,7 @@ class MyStudentAdapter extends ArrayAdapter<Student> {
         String city = current.getCity();
         String photo = current.getPhoto();
 
-        // Get the v<<iew components from the template
+        // Get the view components from the template
         ImageView imageViewPhoto = v.findViewById(R.id.imageViewPhoto);
         TextView textViewName = v.findViewById(R.id.textViewName);
         TextView textViewAge = v.findViewById(R.id.textViewAge);
@@ -50,6 +52,7 @@ class MyStudentAdapter extends ArrayAdapter<Student> {
         textViewName.setText(name);
         textViewAge.setText(age+" years old");
         textViewCity.setText(city);
+        Picasso.with(ctx).load(photo).into(imageViewPhoto);
 
         return v;
     }
