@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 noteList
         );
 
+        // 4.
+        lista.setAdapter(adapter);
+
 
     }
 
