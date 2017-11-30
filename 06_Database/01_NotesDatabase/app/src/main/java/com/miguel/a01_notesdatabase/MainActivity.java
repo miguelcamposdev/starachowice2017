@@ -1,13 +1,18 @@
 package com.miguel.a01_notesdatabase;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -21,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     RealmResults<Note> noteList;
     Realm realm;
     MyNotesAdapter adapter;
+    EditText name;
+    CheckBox important;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +43,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Note newNote = new Note();
-                newNote.setTitle("My first note");
-                newNote.setImportant(true);
-
-                realm.beginTransaction();
-                realm.copyToRealm(newNote);
-                realm.commitTransaction();
-
-                // Refresh the list - adapter
-                noteList = realm.where(Note.class).findAll();
-                adapter.notifyDataSetChanged();
+                showDialogNewNote();
             }
         });
 
@@ -90,5 +87,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void showDialogNewNote() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View v = inflater.inflate(R.layout.dialog_signin, null);
+        name = v.findViewById(R.id.editTextTitle);
+        important = v.findViewById(R.id.checkBoxImportant);
+
+        builder.setView(v);
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        String noteText = name.getText().toString();
+                        boolean noteImportant = important.isChecked();
+
+                        Note newNote = new Note();
+                        newNote.setTitle(noteText);
+                        newNote.setImportant(noteImportant);
+
+                        realm.beginTransaction();
+                        realm.copyToRealm(newNote);
+                        realm.commitTransaction();
+
+                        // Refresh the list - adapter
+                        noteList = realm.where(Note.class).findAll();
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create();
+
+        builder.show();
+
     }
 }
