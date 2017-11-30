@@ -1,12 +1,16 @@
 package com.miguel.a01_notesdatabase;
 
+import io.realm.RealmObject;
+
 /**
  * Created by miguelcampos on 30/11/17.
  */
 
-public class Note {
+public class Note extends RealmObject {
     private String title;
     private boolean important;
+
+    public Note() {}
 
     public Note(String title, boolean important) {
         this.title = title;

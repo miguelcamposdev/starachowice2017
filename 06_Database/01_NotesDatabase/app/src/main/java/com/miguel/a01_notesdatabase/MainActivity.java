@@ -13,9 +13,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
     ListView lista;
-    List<Note> noteList;
+    RealmResults<Note> noteList;
+    Realm realm;
+    MyNotesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +29,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        // Get the database connection
+        realm = Realm.getDefaultInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Note newNote = new Note();
+                newNote.setTitle("My first note");
+                newNote.setImportant(true);
+
+                realm.beginTransaction();
+                realm.copyToRealm(newNote);
+                realm.commitTransaction();
+
+                // Refresh the list - adapter
+                noteList = realm.where(Note.class).findAll();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -39,14 +54,11 @@ public class MainActivity extends AppCompatActivity {
         // 1.
         lista = findViewById(R.id.listViewNotes);
 
-        // 2.
-        noteList = new ArrayList<>();
-        noteList.add(new Note("Supermarket: buy bread and eggs",true));
-        noteList.add(new Note("School: stay at home",true));
-        noteList.add(new Note("Code: learn more about Android",false));
+        // 2. SELECT * FROM Note
+        noteList = realm.where(Note.class).findAll();
 
         // 3.
-        MyNotesAdapter adapter = new MyNotesAdapter(
+        adapter = new MyNotesAdapter(
                 this,
                 R.layout.notes_item,
                 noteList
