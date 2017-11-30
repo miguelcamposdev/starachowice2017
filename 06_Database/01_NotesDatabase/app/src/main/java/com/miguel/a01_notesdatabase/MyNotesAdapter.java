@@ -39,9 +39,11 @@ class MyNotesAdapter extends ArrayAdapter<Note> {
         // 2. Get the view components
         TextView textViewTitle = v.findViewById(R.id.textViewTitle);
         ImageView imageViewImportant = v.findViewById(R.id.imageViewImportant);
+        TextView textViewDescription = v.findViewById(R.id.textViewDescription);
 
         // 3. Set into the view components the current Note info
         textViewTitle.setText(currentNote.getTitle());
+        textViewDescription.setText(currentNote.getDescription());
 
         if(currentNote.isImportant()) {
           imageViewImportant.setImageResource(android.R.drawable.star_on);

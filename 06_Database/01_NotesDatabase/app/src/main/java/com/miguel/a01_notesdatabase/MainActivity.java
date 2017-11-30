@@ -21,12 +21,12 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NoteInterfaceListener {
     ListView lista;
     RealmResults<Note> noteList;
     Realm realm;
     MyNotesAdapter adapter;
-    EditText name;
+    EditText name, description;
     CheckBox important;
 
     @Override
@@ -97,18 +97,23 @@ public class MainActivity extends AppCompatActivity {
         View v = inflater.inflate(R.layout.dialog_signin, null);
         name = v.findViewById(R.id.editTextTitle);
         important = v.findViewById(R.id.checkBoxImportant);
+        description = v.findViewById(R.id.editTextDescription);
 
         builder.setView(v);
+        builder.setTitle("New note");
+        builder.setMessage("Complete the information to create the note");
 
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         String noteText = name.getText().toString();
                         boolean noteImportant = important.isChecked();
+                        String noteDescription = description.getText().toString();
 
                         Note newNote = new Note();
                         newNote.setTitle(noteText);
                         newNote.setImportant(noteImportant);
+                        newNote.setDescription(noteDescription);
 
                         realm.beginTransaction();
                         realm.copyToRealm(newNote);
@@ -128,5 +133,18 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
 
+    }
+
+    @Override
+    public void onImportantClickListener(Note note) {
+        if(note.isImportant()) {
+            note.setImportant(false);
+        } else {
+            note.setImportant(true);
+        }
+
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(note);
+        realm.commitTransaction();
     }
 }

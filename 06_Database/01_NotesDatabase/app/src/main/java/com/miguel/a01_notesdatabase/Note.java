@@ -9,12 +9,21 @@ import io.realm.RealmObject;
 public class Note extends RealmObject {
     private String title;
     private boolean important;
+    private String description;
 
     public Note() {}
 
     public Note(String title, boolean important) {
         this.title = title;
         this.important = important;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {
