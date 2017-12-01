@@ -10,6 +10,7 @@ public class Note extends RealmObject {
     private String title;
     private boolean important;
     private String description;
+    private int color;
 
     public Note() {}
 
