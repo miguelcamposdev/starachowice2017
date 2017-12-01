@@ -7,10 +7,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
 
@@ -58,15 +60,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(starachowice));
 
         mMap.setOnMapClickListener(this);
+        mMap.setOnMarkerDragListener(this);
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mMap.addMarker(
-                new MarkerOptions()
-                        .position(latLng)
-                        .title("You clicked here!")
-                        .snippet("We are here: "+latLng.latitude+","+latLng.longitude)
+        mMap.addMarker(new MarkerOptions()
+        .position(latLng)
+        .title("You clicked here!")
+        .snippet("We are here: "+latLng.latitude+","+latLng.longitude)
+        .draggable(true)
+        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
         );
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+        // Hide the marker dialog == InfoWindow
+        marker.hideInfoWindow();
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+        LatLng currentPosition = marker.getPosition();
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+
     }
 }
